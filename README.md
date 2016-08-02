@@ -15,7 +15,7 @@ i-xxxxxxxx      running      Linux     t2.micro        vpc-xxxxxxxx  subnet-xxxx
 i-xxxxxxxx      running      Linux     t2.micro        vpc-xxxxxxxx  subnet-xxxxxxxx   xx.xx.xx.x       172.31.20.224    test      
 ```
 
-This should eventually go into awsresources as a swith, but good coding is hard and I needed the original version of this much faster.
+This should eventually go into awsresources as a switch, but good coding is hard and I needed the original version of this much faster.
 
 ## awsresources
 
