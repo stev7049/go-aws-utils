@@ -25,7 +25,7 @@ Currently outputs the following:
 * CD = CodeDeploy
 * CF = Number of Cloudformation stacks
 
-Rest should e fairly obvious
+Rest should be fairly obvious
 
 ```
                            Region :  EC2  RDS  EBS  ELB  ASG VPC SNET   SG   CF Bean   CD
