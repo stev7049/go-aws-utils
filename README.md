@@ -1,11 +1,7 @@
 # go-aws-utils
 CLI utilities written in go using aws go sdk
 
-<<<<<<< HEAD
 Makes use of a go routine and WaitGroup in order to get faster execution time against all 12 normal public aws regions.
-=======
-Makes use of a go routine and WaitGroup in order to get faster execution time against all 11 aws regions.
->>>>>>> 6fb5c2dba872a1637d72d37e601eb0e5029565ae
 
 ## instancelist
 
