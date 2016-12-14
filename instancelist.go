@@ -100,12 +100,13 @@ func main() {
 		4:  {"ca-central-1", "Canada (Central)"},
 		5:  {"eu-west-1", "Ireland"},
 		6:  {"eu-central-1", "Frankfurt"},
-		7:  {"ap-southeast-1", "Singapore"},
-		8:  {"ap-southeast-2", "Sydney"},
-		9:  {"ap-northeast-1", "Tokyo"},
-		10: {"ap-northeast-2", "Seoul"},
-		11: {"sa-east-1", "São Paulo"},
-		12: {"ap-south-1", "Mumbai"},
+		7:  {"eu-west-2", "London"},
+		8:  {"ap-southeast-1", "Singapore"},
+		9:  {"ap-southeast-2", "Sydney"},
+		10: {"ap-northeast-1", "Tokyo"},
+		11: {"ap-northeast-2", "Seoul"},
+		12: {"sa-east-1", "São Paulo"},
+		13: {"ap-south-1", "Mumbai"},
 	}
 	goGroup := new(sync.WaitGroup)
 	defer goGroup.Wait()
