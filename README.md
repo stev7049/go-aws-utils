@@ -1,7 +1,7 @@
 # go-aws-utils
 CLI utilities written in go using aws go sdk
 
-Makes use of a go routine and WaitGroup in order to get faster execution time against all 13 normal public aws regions.
+Makes use of a go routine and WaitGroup in order to get faster execution time against all 14 normal public aws regions.
 
 ## instancelist
 
@@ -38,6 +38,7 @@ Canada (Central)     ca-central-1 :    0    0    0    0    0   1    2    1    0 
          Ireland        eu-west-1 :    1    1    1    0    0   2    7   13    2    0    1
        Frankfurt     eu-central-1 :    0    0    0    0    0   1    2    1    0    0    0
            Tokyo   ap-northeast-1 :    0    0    0    0    0   1    2    1    0    0    0
+          London        eu-west-2 :    0    0    0    0    0   1    2    1    0    0    0
        São Paulo        sa-east-1 :    0    0    0    0    0   1    3    1    0    0    0
           Sydney   ap-southeast-2 :    0    0    0    0    0   2    5    4    0    1    2
        Singapore   ap-southeast-1 :    0    0    0    0    0   1    2    2    0    1    0
