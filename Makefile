@@ -3,7 +3,7 @@ GOLIST = $(shell go list ./... | grep -v /vendor/)
 ifeq ($(OS),Windows_NT)
 	INSTALLPRE = "c:\Faws\bin"
 else
-	INSTALLPRE = /usr/local
+	INSTALLPRE = /usr/local/bin
 endif
 
 build: bin/awsresources bin/instancelist
