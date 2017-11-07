@@ -27,8 +27,8 @@ func getInstances(region string, humanregion string, goGroup *sync.WaitGroup) {
 
 	if totalInstances > 0 {
 		fmt.Printf("%-25s %+16s : %-4d\n", humanregion, region, totalInstances)
-		fmt.Println("Instance ID               State        OS        Type            VPC            Subnet           Public IP         Private IP        Name")
-		fmt.Println("---------------------------------------------------------------------------------------------------------------------------------------")
+		fmt.Println("Instance ID               State        OS        Type            VPC            Subnet           Public IP         Private IP        Backup  Name")
+		fmt.Println("-------------------------------------------------------------------------------------------------------------------------------------------------")
 	}
 
 	instanceCounter := 0
@@ -73,15 +73,21 @@ func getInstances(region string, humanregion string, goGroup *sync.WaitGroup) {
 					thisInstanceType = *inst.InstanceType
 				}
 
+                thisBackup := ""
 				thisName := ""
 				for tag := range inst.Tags {
 					if *inst.Tags[tag].Key == "Name" {
 						thisName = *inst.Tags[tag].Value
 					}
+					if *inst.Tags[tag].Key == "Backup" || *inst.Tags[tag].Key == "backup" {
+						thisBackup = *inst.Tags[tag].Value
+					}
 				}
 
+
+
 				//fmt.Printf("\033[34m%-15s\033[0m \033[34m%-12s\033[0m \033[34m%-9s\033[0m \033[34m%-15s\033[0m \033[34m%-9s\033[0m  \033[34m%-9s\033[0m   \033[34m%-15s\033[0m  \033[34m%-15s\033[0m  \033[34m%-30s\033[0m\n", thisInstanceID, thisState, thisPlatform, thisInstanceType, thisVpcID, thisSubnetID, thisPublicIpAddress, thisPrivateIpAddress, thisName)
-				fmt.Printf("%-25s %-12s %-9s %-15s %-14s %-16s %-17s %-17s %-30s\n", thisInstanceID, thisState, thisPlatform, thisInstanceType, thisVpcID, thisSubnetID, thisPublicIpAddress, thisPrivateIpAddress, thisName)
+				fmt.Printf("%-25s %-12s %-9s %-15s %-14s %-16s %-17s %-17s %-7s %-30s\n", thisInstanceID, thisState, thisPlatform, thisInstanceType, thisVpcID, thisSubnetID, thisPublicIpAddress, thisPrivateIpAddress, thisBackup, thisName)
 				if instanceCounter == totalInstances {
 					fmt.Println("\n")
 				}
