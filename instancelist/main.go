@@ -89,7 +89,7 @@ func getInstances(region string, humanregion string, goGroup *sync.WaitGroup) {
 				//fmt.Printf("\033[34m%-15s\033[0m \033[34m%-12s\033[0m \033[34m%-9s\033[0m \033[34m%-15s\033[0m \033[34m%-9s\033[0m  \033[34m%-9s\033[0m   \033[34m%-15s\033[0m  \033[34m%-15s\033[0m  \033[34m%-30s\033[0m\n", thisInstanceID, thisState, thisPlatform, thisInstanceType, thisVpcID, thisSubnetID, thisPublicIpAddress, thisPrivateIpAddress, thisName)
 				fmt.Printf("%-25s %-12s %-9s %-15s %-14s %-16s %-17s %-17s %-7s %-30s\n", thisInstanceID, thisState, thisPlatform, thisInstanceType, thisVpcID, thisSubnetID, thisPublicIpAddress, thisPrivateIpAddress, thisBackup, thisName)
 				if instanceCounter == totalInstances {
-					fmt.Println("\n")
+					fmt.Printf("\n")
 				}
 			}
 		}
