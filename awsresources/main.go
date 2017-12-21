@@ -22,8 +22,8 @@ import (
 	"github.com/aws/aws-sdk-go/service/rds"
 )
 
-func regionError(region string, err error) error {
-	return fmt.Errorf("Error occured in region %s: %v\n", region, err)
+func regionError(service string, region string, err error) error {
+	return fmt.Errorf("Error occured for service %s in region %s: %v\n", service, region, err)
 }
 
 func getResourceCounts(region string, humanregion string, goGroup *sync.WaitGroup, errChan chan error) {
@@ -34,7 +34,7 @@ func getResourceCounts(region string, humanregion string, goGroup *sync.WaitGrou
 	// Call the DescribeInstances Operation
 	resp, err := svc.DescribeInstances(nil)
 	if err != nil {
-		errChan <- regionError(region, err)
+		errChan <- regionError("ec2 (instance count)", region, err)
 		return
 	}
 
@@ -46,7 +46,7 @@ func getResourceCounts(region string, humanregion string, goGroup *sync.WaitGrou
 	// Get VPC count
 	respVpc, err := svc.DescribeVpcs(nil)
 	if err != nil {
-		errChan <- regionError(region, err)
+		errChan <- regionError("ec2 (vpc count)", region, err)
 		return
 	}
 
@@ -55,7 +55,7 @@ func getResourceCounts(region string, humanregion string, goGroup *sync.WaitGrou
 	// Get Subnets count
 	respSubnets, err := svc.DescribeSubnets(nil)
 	if err != nil {
-		errChan <- regionError(region, err)
+		errChan <- regionError("ec2 (subnet count)", region, err)
 		return
 	}
 
@@ -64,7 +64,7 @@ func getResourceCounts(region string, humanregion string, goGroup *sync.WaitGrou
 	// Get SecurityGroups count
 	respSecurityGroups, err := svc.DescribeSecurityGroups(nil)
 	if err != nil {
-		errChan <- regionError(region, err)
+		errChan <- regionError("ec2 (security group count)", region, err)
 		return
 	}
 
@@ -73,27 +73,33 @@ func getResourceCounts(region string, humanregion string, goGroup *sync.WaitGrou
 	// Get Volumes count
 	respEBS, err := svc.DescribeVolumes(nil)
 	if err != nil {
-		errChan <- regionError(region, err)
+		errChan <- regionError("ec2 (ebs volume count)", region, err)
 		return
 	}
 
 	totalEBS := len(respEBS.Volumes)
 
-	// Get Snapshots count
+	/* Get Snapshots count
+	   Relies on env variable being set to filter snapshots to
+	   account, rather than all public snapshots for AMIs
+	*/
+	var totalSS = -1
+	var awsaccount string
+	awsaccount = os.Getenv("AWS_ACCOUNT")
+	if awsaccount != "" {
+		ssinput := &ec2.DescribeSnapshotsInput{
+			OwnerIds: []*string{
+				aws.String(awsaccount),
+			},
+		}
 
-	ssinput := &ec2.DescribeSnapshotsInput{
-		OwnerIds: []*string{
-			aws.String(os.Getenv("AWS_ACCOUNT")),
-		},
+		respSS, err := svc.DescribeSnapshots(ssinput)
+		if err != nil {
+			errChan <- regionError("ec2 (snapshot count)", region, err)
+			return
+		}
+		totalSS = len(respSS.Snapshots)
 	}
-
-	respSS, err := svc.DescribeSnapshots(ssinput)
-	if err != nil {
-		errChan <- regionError(region, err)
-		return
-	}
-
-	totalSS := len(respSS.Snapshots)
 
 	// Get EFS filesystems  count
 	efssvc := efs.New(session.New(), &aws.Config{Region: aws.String(region)})
@@ -111,7 +117,7 @@ func getResourceCounts(region string, humanregion string, goGroup *sync.WaitGrou
 
 	respddb, err := ddb.ListTables(nil)
 	if err != nil {
-		errChan <- regionError(region, err)
+		errChan <- regionError("dynamodb", region, err)
 		return
 	}
 
@@ -123,7 +129,7 @@ func getResourceCounts(region string, humanregion string, goGroup *sync.WaitGrou
 
 	respAsg, err := asg.DescribeAutoScalingGroups(nil)
 	if err != nil {
-		errChan <- regionError(region, err)
+		errChan <- regionError("asg", region, err)
 		return
 	}
 
@@ -134,7 +140,7 @@ func getResourceCounts(region string, humanregion string, goGroup *sync.WaitGrou
 
 	respCf, err := cf.DescribeStacks(nil)
 	if err != nil {
-		errChan <- regionError(region, err)
+		errChan <- regionError("CloudFormation", region, err)
 		return
 	}
 
@@ -145,7 +151,7 @@ func getResourceCounts(region string, humanregion string, goGroup *sync.WaitGrou
 
 	respElb, err := awselb.DescribeLoadBalancers(nil)
 	if err != nil {
-		errChan <- regionError(region, err)
+		errChan <- regionError("elb", region, err)
 		return
 	}
 
@@ -156,7 +162,7 @@ func getResourceCounts(region string, humanregion string, goGroup *sync.WaitGrou
 
 	respRDS, err := awsrds.DescribeDBInstances(nil)
 	if err != nil {
-		errChan <- regionError(region, err)
+		errChan <- regionError("rds", region, err)
 		return
 	}
 
@@ -167,7 +173,7 @@ func getResourceCounts(region string, humanregion string, goGroup *sync.WaitGrou
 
 	respeb, err := eb.DescribeApplications(nil)
 	if err != nil {
-		errChan <- regionError(region, err)
+		errChan <- regionError("eb", region, err)
 		return
 	}
 
@@ -180,7 +186,7 @@ func getResourceCounts(region string, humanregion string, goGroup *sync.WaitGrou
 
 		ecsRes, err := contService.ListClusters(nil)
 		if err != nil {
-			errChan <- regionError(region, err)
+			errChan <- regionError("ecs", region, err)
 			return
 		}
 		totalECS = len(ecsRes.ClusterArns)
@@ -193,7 +199,7 @@ func getResourceCounts(region string, humanregion string, goGroup *sync.WaitGrou
 
 	respCD, err := cd.ListApplications(nil)
 	if err != nil {
-		errChan <- regionError(region, err)
+		errChan <- regionError("CodeDeploy", region, err)
 		return
 	}
 
@@ -204,7 +210,7 @@ func getResourceCounts(region string, humanregion string, goGroup *sync.WaitGrou
 
 	respl, err := l.ListFunctions(nil)
 	if err != nil {
-		errChan <- regionError(region, err)
+		errChan <- regionError("Lambda", region, err)
 		return
 	}
 
