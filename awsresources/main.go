@@ -179,20 +179,15 @@ func getResourceCounts(region string, humanregion string, goGroup *sync.WaitGrou
 
 	totaleb := len(respeb.Applications)
 
-	//ECS not available in Mumbai or São Paulo
-	var totalECS int
-	if region != "ap-south-1" && region != "sa-east-1" {
-		contService := ecs.New(session.New(), &aws.Config{Region: aws.String(region)})
+	//Get ECS Cluster Counts
+	contService := ecs.New(session.New(), &aws.Config{Region: aws.String(region)})
 
-		ecsRes, err := contService.ListClusters(nil)
-		if err != nil {
-			errChan <- regionError("ecs", region, err)
-			return
-		}
-		totalECS = len(ecsRes.ClusterArns)
-	} else {
-		totalECS = 0
+	ecsRes, err := contService.ListClusters(nil)
+	if err != nil {
+		errChan <- regionError("ecs", region, err)
+		return
 	}
+	totalECS := len(ecsRes.ClusterArns)
 
 	// Get CodeDeploy Counts
 	cd := codedeploy.New(session.New(), &aws.Config{Region: aws.String(region)})
