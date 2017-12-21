@@ -1,7 +1,7 @@
 # go-aws-utils
 CLI utilities written in go using aws go sdk
 
-Makes use of a go routine and WaitGroup in order to get faster execution time against all 14 normal public aws regions.
+Makes use of a go routine and WaitGroup in order to get faster execution time against all 15 normal public aws regions.
 
 ## instancelist
 
@@ -9,10 +9,12 @@ Currently outputs the following (print skips empty regions):
 
 ```
 Oregon                  us-west-2 : 2   
-Instance ID      State        OS         Type               VPC          Subnet        Public IP        Private IP       Name
-----------------------------------------------------------------------------------------------------------------------------------------
-i-xxxxxxxx      running      Linux     t2.micro        vpc-xxxxxxxx  subnet-xxxxxxxx   xx.xx.xx.xx      172.31.20.191                                  
-i-xxxxxxxx      running      Linux     t2.micro        vpc-xxxxxxxx  subnet-xxxxxxxx   xx.xx.xx.x       172.31.20.224    test      
+Instance ID               State        OS        Type            VPC            Subnet           Public IP         Private IP        Backup  Name
+-------------------------------------------------------------------------------------------------------------------------------------------------
+i-xxxxxxxxxxxxxxxxx      running      Linux     t2.micro        vpc-xxxxxxxx  subnet-xxxxxxxx   xx.xx.xx.xx      172.31.20.191
+i-xxxxxxxxxxxxxxxxx      running      Linux     t2.micro        vpc-xxxxxxxx  subnet-xxxxxxxx   xx.xx.xx.xx      172.31.20.224               test
+i-xxxxxxxxxxxxxxxxx      stopped      Windows   t2.small        vpc-xxxxxxxx  subnet-xxxxxxxx                    172.18.33.19        False   test
+
 ```
 
 This should eventually go into awsresources as a switch, but good coding is hard and I needed the original version of this much faster.
@@ -47,6 +49,7 @@ Canada (Central)     ca-central-1 :    1    1    0    3    2    1    1   3   10 
           Oregon        us-west-2 :    1    5    1    3    2    1    0   2    7    5    2    1    0    0    1    2
           London        eu-west-2 :    0    0    0    0    0    0    0   2    6    3    2    0    0    0    0    0
          Ireland        eu-west-1 :    0    1    0    0    0    0    0   2    7    2    3    0    1    0    0    0
+           Paris        eu-west-3 :    0    0    0    0    0    0    0   1    3    1    0    0    0    0    0    0
        São Paulo        sa-east-1 :    0    0    0    0    0    0    0   1    3    1    1    0    0    0    0    0
        Frankfurt     eu-central-1 :    0    1    0    0    0    0    0   1    3    1    1    0    0    0    0    0
            Tokyo   ap-northeast-1 :    0    0    0    0    0    0    0   1    2    1    1    0    0    0    0    0

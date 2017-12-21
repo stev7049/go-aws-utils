@@ -7,7 +7,6 @@ import (
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/ec2"
-	//    "github.com/mgutz/ansi"
 )
 
 func getInstances(region string, humanregion string, goGroup *sync.WaitGroup) {
@@ -86,7 +85,6 @@ func getInstances(region string, humanregion string, goGroup *sync.WaitGroup) {
 
 
 
-				//fmt.Printf("\033[34m%-15s\033[0m \033[34m%-12s\033[0m \033[34m%-9s\033[0m \033[34m%-15s\033[0m \033[34m%-9s\033[0m  \033[34m%-9s\033[0m   \033[34m%-15s\033[0m  \033[34m%-15s\033[0m  \033[34m%-30s\033[0m\n", thisInstanceID, thisState, thisPlatform, thisInstanceType, thisVpcID, thisSubnetID, thisPublicIpAddress, thisPrivateIpAddress, thisName)
 				fmt.Printf("%-25s %-12s %-9s %-15s %-14s %-16s %-17s %-17s %-7s %-30s\n", thisInstanceID, thisState, thisPlatform, thisInstanceType, thisVpcID, thisSubnetID, thisPublicIpAddress, thisPrivateIpAddress, thisBackup, thisName)
 				if instanceCounter == totalInstances {
 					fmt.Printf("\n")
@@ -107,12 +105,13 @@ func main() {
 		5:  {"eu-west-1", "Ireland"},
 		6:  {"eu-central-1", "Frankfurt"},
 		7:  {"eu-west-2", "London"},
-		8:  {"ap-southeast-1", "Singapore"},
-		9:  {"ap-southeast-2", "Sydney"},
-		10: {"ap-northeast-1", "Tokyo"},
-		11: {"ap-northeast-2", "Seoul"},
-		12: {"sa-east-1", "São Paulo"},
-		13: {"ap-south-1", "Mumbai"},
+		8:  {"eu-west-3", "Paris"},
+		9:  {"ap-southeast-1", "Singapore"},
+		10: {"ap-southeast-2", "Sydney"},
+		11: {"ap-northeast-1", "Tokyo"},
+		12: {"ap-northeast-2", "Seoul"},
+		13: {"sa-east-1", "São Paulo"},
+		14: {"ap-south-1", "Mumbai"},
 	}
 	goGroup := new(sync.WaitGroup)
 	defer goGroup.Wait()

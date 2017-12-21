@@ -9,6 +9,7 @@ var RegionMap = map[string]string{
 	"eu-west-1":      "Ireland",
 	"eu-central-1":   "Frankfurt",
 	"eu-west-2":      "London",
+	"eu-west-3":      "Paris",
 	"ap-southeast-1": "Singapore",
 	"ap-southeast-2": "Sydney",
 	"ap-northeast-1": "Tokyo",
