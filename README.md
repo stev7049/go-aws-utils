@@ -33,7 +33,7 @@ Rest should be fairly obvious.
 
 Additonal NOTES:
 
-* Snapshots has a hidden dependency. If the **AWS_ACCOUNT** enviornment variable is not set it will return 0.
+* Snapshots has a hidden dependency. If the **AWS_ACCOUNT** enviornment variable is not set it will return -1.
 * ECS currently not available in São Paulo or Mumbai and also return 0.
 
 
