@@ -8,7 +8,7 @@ Makes use of a go routine and WaitGroup in order to get faster execution time ag
 Currently outputs the following (print skips empty regions):
 
 ```
-Oregon                  us-west-2 : 2   
+Oregon                  us-west-2 : 3   
 Instance ID               State        OS        Type            VPC            Subnet           Public IP         Private IP        Backup  Name
 -------------------------------------------------------------------------------------------------------------------------------------------------
 i-xxxxxxxxxxxxxxxxx      running      Linux     t2.micro        vpc-xxxxxxxx  subnet-xxxxxxxx   xx.xx.xx.xx      172.31.20.191
