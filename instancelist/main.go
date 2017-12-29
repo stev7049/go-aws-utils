@@ -4,24 +4,31 @@ import (
 	"fmt"
 	"sync"
 
+	"github.com/mdfilio/go-aws-utils/common"
+
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/ec2"
 )
 
-func getInstances(region string, humanregion string, goGroup *sync.WaitGroup) {
+func regionError(region string, err error) error {
+	return fmt.Errorf("Error occured in region %s: %v\n", region, err)
+}
+
+func getInstances(region string, humanregion string, goGroup *sync.WaitGroup, errChan chan error) {
 	defer goGroup.Done()
+
 	svc := ec2.New(session.New(), &aws.Config{Region: aws.String(region)})
 
 	// Call the DescribeInstances Operation
 	resp, err := svc.DescribeInstances(nil)
 	if err != nil {
-		panic(err)
+		errChan <- regionError(region, err)
 	}
 
-	var totalInstances int = 0
+	var totalInstances int
 	for _, res := range resp.Reservations {
-		totalInstances = totalInstances + len(res.Instances)
+		totalInstances += len(res.Instances)
 	}
 
 	if totalInstances > 0 {
@@ -34,7 +41,7 @@ func getInstances(region string, humanregion string, goGroup *sync.WaitGroup) {
 	for idx, res := range resp.Reservations {
 		if len(res.Instances) > 0 {
 			for _, inst := range resp.Reservations[idx].Instances {
-				instanceCounter += 1
+				instanceCounter++
 				thisInstanceID := ""
 				thisPrivateIpAddress := ""
 				thisPublicIpAddress := ""
@@ -72,7 +79,7 @@ func getInstances(region string, humanregion string, goGroup *sync.WaitGroup) {
 					thisInstanceType = *inst.InstanceType
 				}
 
-                thisBackup := ""
+				thisBackup := ""
 				thisName := ""
 				for tag := range inst.Tags {
 					if *inst.Tags[tag].Key == "Name" {
@@ -82,8 +89,6 @@ func getInstances(region string, humanregion string, goGroup *sync.WaitGroup) {
 						thisBackup = *inst.Tags[tag].Value
 					}
 				}
-
-
 
 				fmt.Printf("%-25s %-12s %-9s %-15s %-14s %-16s %-17s %-17s %-7s %-30s\n", thisInstanceID, thisState, thisPlatform, thisInstanceType, thisVpcID, thisSubnetID, thisPublicIpAddress, thisPrivateIpAddress, thisBackup, thisName)
 				if instanceCounter == totalInstances {
@@ -96,29 +101,23 @@ func getInstances(region string, humanregion string, goGroup *sync.WaitGroup) {
 
 func main() {
 
-	awsregions := map[int][]string{
-		0:  {"us-east-1", "N. Virginia"},
-		1:  {"us-east-2", "Ohio"},
-		2:  {"us-west-1", "N. California"},
-		3:  {"us-west-2", "Oregon"},
-		4:  {"ca-central-1", "Canada (Central)"},
-		5:  {"eu-west-1", "Ireland"},
-		6:  {"eu-central-1", "Frankfurt"},
-		7:  {"eu-west-2", "London"},
-		8:  {"eu-west-3", "Paris"},
-		9:  {"ap-southeast-1", "Singapore"},
-		10: {"ap-southeast-2", "Sydney"},
-		11: {"ap-northeast-1", "Tokyo"},
-		12: {"ap-northeast-2", "Seoul"},
-		13: {"sa-east-1", "São Paulo"},
-		14: {"ap-south-1", "Mumbai"},
-	}
 	goGroup := new(sync.WaitGroup)
+
+	errChan := make(chan error)
+	defer func() {
+		close(errChan)
+	}()
 	defer goGroup.Wait()
 
-	for i := 0; i < len(awsregions); i++ {
+	for region, pName := range common.RegionMap {
 		goGroup.Add(1)
-		go getInstances(awsregions[i][0], awsregions[i][1], goGroup)
+		go getInstances(region, pName, goGroup, errChan)
 	}
+
+	go func() {
+		for err := range errChan {
+			print(err.Error())
+		}
+	}()
 
 }
