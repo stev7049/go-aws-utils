@@ -35,7 +35,7 @@ Rest should be fairly obvious.
 
 Additonal NOTES:
 
-* Snapshots has a hidden dependency. If the **AWS_ACCOUNT** enviornment variable is not set it will return -1.
+* Snapshots has a hidden dependency. If the **AWS_ACCOUNT** environment variable is not set it will return -1.
 
 ```
                            Region :  EC2  ECS  RDS  EBS   SS  ELB  ASG VPC SNET   SG   CF   EB   CD  DDB  EFS    L
