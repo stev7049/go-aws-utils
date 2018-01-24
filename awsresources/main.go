@@ -157,6 +157,18 @@ func getResourceCounts(region string, humanregion string, goGroup *sync.WaitGrou
 
 	totalElb := len(respElb.LoadBalancerDescriptions)
 
+	// Get ELBv2 Counts. Adds to exiting ELB counter.
+	awselbv2 := elbv2.New(session.New(), &aws.Config{Region: aws.String(region)})
+
+	respElbv2, err := awselbv2.DescribeLoadBalancers(nil)
+	if err != nil {
+		errChan <- regionError("elbv2", region, err)
+		return
+	}
+
+	totalElb += len(respElbv2.LoadBalancers)
+
+
 	// Get RDS Counts
 	awsrds := rds.New(session.New(), &aws.Config{Region: aws.String(region)})
 
