@@ -6,7 +6,6 @@ import (
 	"sync"
 
 	"github.com/mdfilio/go-aws-utils/common"
-
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/autoscaling"
@@ -24,7 +23,8 @@ import (
 )
 
 func regionError(service string, region string, err error) error {
-	return fmt.Errorf("Error occured for service %s in region %s: %v\n", service, region, err)
+	// return fmt.Errorf("Error occured for service %s in region %s: %v\n", service, region, err)
+	return fmt.Errorf("        Region Error for %s\n", region)
 }
 
 func getResourceCounts(region string, humanregion string, goGroup *sync.WaitGroup, errChan chan error) {
@@ -238,6 +238,7 @@ func main() {
 	defer func() {
 		close(errChan)
 	}()
+
 	defer goGroup.Wait()
 
 	fmt.Printf("%+33s : %4s %4s %4s %4s %4s %4s %4s", "Region", "EC2", "ECS", "RDS", "EBS", "SS", "ELB", "ASG")
