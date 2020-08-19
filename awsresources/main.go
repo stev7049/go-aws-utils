@@ -5,7 +5,7 @@ import (
 	"os"
 	"sync"
 
-	"github.com/mdfilio/go-aws-utils/common"
+	"github.com/go-aws-utils/common"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/autoscaling"
