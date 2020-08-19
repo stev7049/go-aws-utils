@@ -3,16 +3,15 @@ package main
 import (
 	"fmt"
 	"sync"
-
-	"github.com/mdfilio/go-aws-utils/common"
-
+	"github.com/go-aws-utils/common"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/ec2"
 )
 
 func regionError(region string, err error) error {
-	return fmt.Errorf("Error occured in region %s: %v\n", region, err)
+	//return fmt.Errorf("Error occured in region %s: %v\n", region, err)
+	return fmt.Errorf("Region Error for %s\n", region)
 }
 
 func getInstances(region string, humanregion string, goGroup *sync.WaitGroup, errChan chan error) {
@@ -107,6 +106,7 @@ func main() {
 	defer func() {
 		close(errChan)
 	}()
+
 	defer goGroup.Wait()
 
 	for region, pName := range common.RegionMap {
