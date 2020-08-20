@@ -1,10 +1,12 @@
 # go-aws-utils
-# Forked from https://github.com/mdfilio/go-aws-utils
-# https://docs.aws.amazon.com/sdk-for-go/api/
-
+Forked from https://github.com/mdfilio/go-aws-utils
+#
+https://docs.aws.amazon.com/sdk-for-go/api/
+#
 CLI utilities written in go using aws go sdk
 
 Makes use of a Go Language to pull data against all 22 aws regions (as of 2020).
+#
 Data Univailable reported for Disabled or Regions in Error State.
 
 
