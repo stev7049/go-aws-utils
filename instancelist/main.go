@@ -11,7 +11,7 @@ import (
 
 func regionError(region string, err error) error {
 	//return fmt.Errorf("Error occured in region %s: %v\n", region, err)
-	return fmt.Errorf("Region Error for %s\n", region)
+	return fmt.Errorf("Data Univailable for: %s\n", region)
 }
 
 func getInstances(region string, humanregion string, goGroup *sync.WaitGroup, errChan chan error) {
