@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"os"
+//	"os"     // totalSS
 	"sync"
 
 	"github.com/go-aws-utils/common"
@@ -24,7 +24,7 @@ import (
 
 func regionError(service string, region string, err error) error {
 	// return fmt.Errorf("Error occured for service %s in region %s: %v\n", service, region, err)
-	return fmt.Errorf("        Region Error for %s\n", region)
+	return fmt.Errorf("Data Univailable for: %s\n", region)
 }
 
 func getResourceCounts(region string, humanregion string, goGroup *sync.WaitGroup, errChan chan error) {
@@ -84,23 +84,27 @@ func getResourceCounts(region string, humanregion string, goGroup *sync.WaitGrou
 	   Relies on env variable being set to filter snapshots to
 	   account, rather than all public snapshots for AMIs
 	*/
-	var totalSS = -1
-	var awsaccount string
-	awsaccount = os.Getenv("AWS_ACCOUNT")
-	if awsaccount != "" {
-		ssinput := &ec2.DescribeSnapshotsInput{
-			OwnerIds: []*string{
-				aws.String(awsaccount),
-			},
-		}
 
-		respSS, err := svc.DescribeSnapshots(ssinput)
-		if err != nil {
-			errChan <- regionError("ec2 (snapshot count)", region, err)
-			return
-		}
-		totalSS = len(respSS.Snapshots)
-	}
+        // Disabling till I find a better way, Possibly 
+        // https://docs.aws.amazon.com/sdk-for-go/api/service/sts/#STS.GetCallerIdentity
+//
+//	var totalSS = -1
+//	var awsaccount string
+//	awsaccount = os.Getenv("AWS_ACCOUNT")
+//	if awsaccount != "" {
+//		ssinput := &ec2.DescribeSnapshotsInput{
+//			OwnerIds: []*string{
+//				aws.String(awsaccount),
+//			},
+//		}
+//
+//		respSS, err := svc.DescribeSnapshots(ssinput)
+//		if err != nil {
+//			errChan <- regionError("ec2 (snapshot count)", region, err)
+//			return
+//		}
+//		totalSS = len(respSS.Snapshots)
+//	}
 
 	// Get EFS filesystems  count
 	efssvc := efs.New(session.New(), &aws.Config{Region: aws.String(region)})
@@ -225,7 +229,8 @@ func getResourceCounts(region string, humanregion string, goGroup *sync.WaitGrou
 	totalFunctions := len(respl.Functions)
 
 	//Print stuff
-	fmt.Printf("%+16s %+16s : %4d %4d %4d %4d %4d %4d %4d", humanregion, region, totalInstances, totalECS, totalRDS, totalEBS, totalSS, totalElb, totalASG)
+	// fmt.Printf("%+16s %+16s : %4d %4d %4d %4d %4d %4d %4d", humanregion, region, totalInstances, totalECS, totalRDS, totalEBS, totalSS, totalElb, totalASG)
+	fmt.Printf("%+16s %+16s : %4d %4d %4d %4d %4d %4d", humanregion, region, totalInstances, totalECS, totalRDS, totalEBS, totalElb, totalASG)
 	fmt.Printf("%4d %4d %4d %4d %4d %4d %4d %4d %4d\n", totalVPCs, totalSubnets, totalSecurityGroups, totalCloudFormationStacks, totaleb, totalCD, totalTables, totalFileSystems, totalFunctions)
 
 	return
@@ -241,7 +246,8 @@ func main() {
 
 	defer goGroup.Wait()
 
-	fmt.Printf("%+33s : %4s %4s %4s %4s %4s %4s %4s", "Region", "EC2", "ECS", "RDS", "EBS", "SS", "ELB", "ASG")
+	// fmt.Printf("%+33s : %4s %4s %4s %4s %4s %4s %4s", "Region", "EC2", "ECS", "RDS", "EBS", "SS", "ELB", "ASG")
+	fmt.Printf("%+33s : %4s %4s %4s %4s %4s %4s", "Region", "EC2", "ECS", "RDS", "EBS", "ELB", "ASG")
 	fmt.Printf("%4s %4s %4s %4s %4s %4s %4s %4s %4s\n", "VPC", "SNET", "SG", "CF", "EB", "CD", "DDB", "EFS", "L")
 	fmt.Println("-------------------------------------------------------------------------------------------------------------------")
 	for region, pName := range common.RegionMap {
