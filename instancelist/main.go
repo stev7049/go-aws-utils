@@ -32,8 +32,8 @@ func getInstances(region string, humanregion string, goGroup *sync.WaitGroup, er
 
 	if totalInstances > 0 {
 		fmt.Printf("%-25s %+16s : %-4d\n", humanregion, region, totalInstances)
-		fmt.Println("Instance ID               State        OS        Type            VPC            Subnet           Public IP         Private IP        Backup  Name")
-		fmt.Println("-------------------------------------------------------------------------------------------------------------------------------------------------")
+		fmt.Println("Instance ID               State        OS        Type            VPC                    Subnet                  Public IP         Private IP        Backup  Name")
+		fmt.Println("----------------------------------------------------------------------------------------------------------------------------------------------------------------")
 	}
 
 	instanceCounter := 0
